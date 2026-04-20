@@ -47,7 +47,7 @@ mvn clean package
 ### Step 3: Run the Server
 ```bash
 # Option A: Using embedded Grizzly server
-java -jar target/smart-campus-api-1.0.0-shaded.jar
+java -jar target/SmartCampusAPI-1.0-SNAPSHOT-shaded.jar
 
 # Option B: Deploy WAR to Tomcat
 # Copy target/smart-campus-api-1.0.0.war to $CATALINA_HOME/webapps/

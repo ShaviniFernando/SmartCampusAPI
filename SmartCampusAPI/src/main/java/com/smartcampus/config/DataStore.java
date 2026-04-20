@@ -9,10 +9,29 @@ public class DataStore {
     private static final Map<String, Room> rooms = new ConcurrentHashMap<>();
     private static final Map<String, Sensor> sensors = new ConcurrentHashMap<>();
 
-    public static Map<String, Room> getRooms() {
+    // Room CRUD
+    public static Map<String, Room> getAllRooms() {
         return rooms;
     }
 
+    public static Room getRoomById(String id) {
+        return rooms.get(id);
+    }
+
+    public static void addRoom(Room room) {
+        rooms.put(room.getId(), room);
+    }
+
+    public static boolean deleteRoom(String id) {
+        // Return false if sensors are attached to this room (safety check)
+        boolean hasSensors = sensors.values().stream().anyMatch(s -> s.getRoomId().equals(id));
+        if (hasSensors) {
+            return false;
+        }
+        return rooms.remove(id) != null;
+    }
+
+    // Sensor Getters
     public static Map<String, Sensor> getSensors() {
         return sensors;
     }

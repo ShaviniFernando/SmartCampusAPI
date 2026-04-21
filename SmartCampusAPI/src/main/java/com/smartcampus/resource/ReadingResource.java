@@ -4,7 +4,7 @@ import com.smartcampus.config.DataStore;
 import com.smartcampus.model.Reading;
 import com.smartcampus.model.Sensor;
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.ForbiddenException;
+import com.smartcampus.exception.ForbiddenException;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Produces;

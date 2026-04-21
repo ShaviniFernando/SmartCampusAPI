@@ -4,10 +4,15 @@ import com.smartcampus.config.DataStore;
 import com.smartcampus.model.Room;
 import com.smartcampus.exception.ResourceNotFoundException;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.Collection;
 
 @Path("/rooms")
@@ -28,5 +33,15 @@ public class RoomResource {
             throw new ResourceNotFoundException("Room with ID " + id + " not found");
         }
         return room;
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addRoom(Room room, @Context UriInfo uriInfo) {
+        DataStore.addRoom(room);
+        URI uri = uriInfo.getAbsolutePathBuilder().path(room.getId()).build();
+        return Response.created(uri)
+                .entity(room)
+                .build();
     }
 }

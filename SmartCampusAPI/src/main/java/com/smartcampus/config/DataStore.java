@@ -2,6 +2,7 @@ package com.smartcampus.config;
 
 import com.smartcampus.model.Room;
 import com.smartcampus.model.Sensor;
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -31,8 +32,22 @@ public class DataStore {
         return rooms.remove(id) != null;
     }
 
-    // Sensor Getters
-    public static Map<String, Sensor> getSensors() {
+    // Sensor CRUD
+    public static Map<String, Sensor> getAllSensors() {
         return sensors;
+    }
+
+    public static Sensor getSensorById(String id) {
+        return sensors.get(id);
+    }
+
+    public static void addSensor(Sensor sensor) {
+        sensors.put(sensor.getId(), sensor);
+    }
+
+    public static Collection<Sensor> getSensorsByType(String type) {
+        return sensors.values().stream()
+                .filter(s -> s.getType().equalsIgnoreCase(type))
+                .collect(java.util.stream.Collectors.toList());
     }
 }

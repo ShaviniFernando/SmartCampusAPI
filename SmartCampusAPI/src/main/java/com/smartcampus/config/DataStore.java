@@ -2,6 +2,7 @@ package com.smartcampus.config;
 
 import com.smartcampus.model.Room;
 import com.smartcampus.model.Sensor;
+import com.smartcampus.model.Reading;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -49,5 +50,20 @@ public class DataStore {
         return sensors.values().stream()
                 .filter(s -> s.getType().equalsIgnoreCase(type))
                 .collect(java.util.stream.Collectors.toList());
+    }
+
+    // Sub-resource (Reading) operations
+    public static void addReadingToSensor(String sensorId, Reading reading) {
+        Sensor sensor = getSensorById(sensorId);
+        if (sensor != null) {
+            sensor.getReadings().add(reading);
+            // Also update current value
+            sensor.setCurrentValue(reading.getValue());
+        }
+    }
+
+    public static java.util.List<Reading> getSensorReadings(String sensorId) {
+        Sensor sensor = getSensorById(sensorId);
+        return sensor != null ? sensor.getReadings() : java.util.Collections.emptyList();
     }
 }

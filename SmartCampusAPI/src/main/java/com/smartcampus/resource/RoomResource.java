@@ -55,9 +55,7 @@ public class RoomResource {
         
         boolean deleted = DataStore.deleteRoom(id);
         if (!deleted) {
-            return Response.status(Response.Status.CONFLICT)
-                    .entity(new com.smartcampus.exception.ErrorResponse("Cannot delete room with active sensors", 409))
-                    .build();
+            throw new com.smartcampus.exception.ConflictException("Cannot delete room with active sensors");
         }
         return Response.noContent().build();
     }

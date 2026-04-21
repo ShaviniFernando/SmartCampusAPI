@@ -1,12 +1,7 @@
 package com.smartcampus.exception;
 
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response;
-
-public class ResourceNotFoundException extends WebApplicationException {
+public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {
-        super(Response.status(Response.Status.NOT_FOUND)
-                .entity(new ErrorResponse(message, 404))
-                .build());
+        super(message);
     }
 }

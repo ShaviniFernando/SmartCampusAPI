@@ -1,23 +1,35 @@
 package com.smartcampus.model;
 
-public class Reading {
+/**
+ * Represents a single sensor reading captured at a specific timestamp.
+ * Each reading has a unique ID, a Unix epoch timestamp, and a numeric value.
+ */
+public class SensorReading {
 
     private String id;
     private long timestamp;
     private double value;
 
     // Default constructor (required for JSON deserialization)
-    public Reading() {
+    public SensorReading() {
     }
 
     // Parameterized constructor
-    public Reading(String id, long timestamp, double value) {
+    public SensorReading(String id, long timestamp, double value) {
         this.id = id;
         this.timestamp = timestamp;
         this.value = value;
     }
 
     // Getters and Setters
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public long getTimestamp() {
         return timestamp;
     }
@@ -34,16 +46,8 @@ public class Reading {
         this.value = value;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     @Override
     public String toString() {
-        return "Reading{id='" + id + "', timestamp=" + timestamp + ", value=" + value + "}";
+        return "SensorReading{id='" + id + "', timestamp=" + timestamp + ", value=" + value + "}";
     }
 }

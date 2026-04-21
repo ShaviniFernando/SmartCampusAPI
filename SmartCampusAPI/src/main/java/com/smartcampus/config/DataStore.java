@@ -1,17 +1,27 @@
 package com.smartcampus.config;
 
+import com.smartcampus.model.SensorReading;
 import com.smartcampus.model.Room;
 import com.smartcampus.model.Sensor;
-import com.smartcampus.model.Reading;
+
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
+/**
+ * Singleton in-memory data store for Rooms, Sensors, and Readings.
+ * Uses ConcurrentHashMap to be thread-safe across request-scoped resource instances.
+ */
 public class DataStore {
+
     private static final Map<String, Room> rooms = new ConcurrentHashMap<>();
     private static final Map<String, Sensor> sensors = new ConcurrentHashMap<>();
 
-    // Room CRUD
+    // ─── Room Operations ───────────────────────────────────────────────────────
+
     public static Map<String, Room> getAllRooms() {
         return rooms;
     }
@@ -24,18 +34,24 @@ public class DataStore {
         rooms.put(room.getId(), room);
     }
 
+    /**
+     * Deletes a room only if its sensorIds list is empty.
+     * Returns false (without deleting) if the room still has linked sensors.
+     */
     public static boolean deleteRoom(String id) {
         Room room = rooms.get(id);
-        if (room == null) return false;
-        
-        // Return false if sensors are attached to this room (safety check)
-        if (!room.getSensorIds().isEmpty()) {
+        if (room == null) {
             return false;
         }
-        return rooms.remove(id) != null;
+        if (room.getSensorIds() != null && !room.getSensorIds().isEmpty()) {
+            return false; // room still has sensors — caller must throw RoomNotEmptyException
+        }
+        rooms.remove(id);
+        return true;
     }
 
-    // Sensor CRUD
+    // ─── Sensor Operations ────────────────────────────────────────────────────
+
     public static Map<String, Sensor> getAllSensors() {
         return sensors;
     }
@@ -44,9 +60,13 @@ public class DataStore {
         return sensors.get(id);
     }
 
+    /**
+     * Adds a sensor and registers its ID into the parent room's sensorIds list.
+     */
     public static void addSensor(Sensor sensor) {
         sensors.put(sensor.getId(), sensor);
-        Room room = getRoomById(sensor.getRoomId());
+        // Maintain bi-directional link: add sensorId to the room's sensorIds list
+        Room room = rooms.get(sensor.getRoomId());
         if (room != null && !room.getSensorIds().contains(sensor.getId())) {
             room.getSensorIds().add(sensor.getId());
         }
@@ -55,21 +75,22 @@ public class DataStore {
     public static Collection<Sensor> getSensorsByType(String type) {
         return sensors.values().stream()
                 .filter(s -> s.getType().equalsIgnoreCase(type))
-                .collect(java.util.stream.Collectors.toList());
+                .collect(Collectors.toList());
     }
 
-    // Sub-resource (Reading) operations
-    public static void addReadingToSensor(String sensorId, Reading reading) {
+    /**
+     * Appends a reading to the sensor's history and updates currentValue.
+     */
+    public static void addReadingToSensor(String sensorId, SensorReading reading) {
         Sensor sensor = getSensorById(sensorId);
         if (sensor != null) {
             sensor.getReadings().add(reading);
-            // Also update current value
             sensor.setCurrentValue(reading.getValue());
         }
     }
 
-    public static java.util.List<Reading> getSensorReadings(String sensorId) {
+    public static List<SensorReading> getSensorReadings(String sensorId) {
         Sensor sensor = getSensorById(sensorId);
-        return sensor != null ? sensor.getReadings() : java.util.Collections.emptyList();
+        return sensor != null ? sensor.getReadings() : Collections.emptyList();
     }
 }

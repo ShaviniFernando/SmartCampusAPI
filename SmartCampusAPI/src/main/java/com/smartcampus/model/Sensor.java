@@ -10,7 +10,7 @@ public class Sensor {
     private String status;
     private double currentValue;
     private String roomId;
-    private List<Reading> readings;
+    private List<SensorReading> readings;
 
     // Default constructor (required for JSON deserialization)
     public Sensor() {
@@ -68,11 +68,11 @@ public class Sensor {
         this.roomId = roomId;
     }
 
-    public List<Reading> getReadings() {
+    public List<SensorReading> getReadings() {
         return readings;
     }
 
-    public void setReadings(List<Reading> readings) {
+    public void setReadings(List<SensorReading> readings) {
         this.readings = readings;
     }
 

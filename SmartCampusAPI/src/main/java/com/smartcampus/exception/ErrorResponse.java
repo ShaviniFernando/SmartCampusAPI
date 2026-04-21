@@ -1,23 +1,22 @@
 package com.smartcampus.exception;
 
-import java.time.Instant;
-
+/**
+ * Standard JSON error response body returned by all exception mappers.
+ * Format: { "error": "...", "message": "..." }
+ */
 public class ErrorResponse {
+
     private String error;
-    private int status;
-    private long timestamp;
+    private String message;
 
     public ErrorResponse() {
-        this.timestamp = Instant.now().toEpochMilli();
     }
 
-    public ErrorResponse(String error, int status) {
-        this();
+    public ErrorResponse(String error, String message) {
         this.error = error;
-        this.status = status;
+        this.message = message;
     }
 
-    // Getters and Setters
     public String getError() {
         return error;
     }
@@ -26,19 +25,11 @@ public class ErrorResponse {
         this.error = error;
     }
 
-    public int getStatus() {
-        return status;
+    public String getMessage() {
+        return message;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

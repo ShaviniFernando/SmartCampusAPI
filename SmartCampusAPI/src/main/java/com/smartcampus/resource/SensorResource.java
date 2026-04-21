@@ -54,4 +54,13 @@ public class SensorResource {
                 .entity(sensor)
                 .build();
     }
+
+    @Path("/{id}/readings")
+    public ReadingResource getReadingResource(@PathParam("id") String id) {
+        // Validation: Verify sensor exists before returning sub-resource
+        if (DataStore.getSensorById(id) == null) {
+            throw new ResourceNotFoundException("Sensor with ID " + id + " not found");
+        }
+        return new ReadingResource(id);
+    }
 }

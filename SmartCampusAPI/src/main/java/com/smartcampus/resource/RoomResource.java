@@ -3,6 +3,7 @@ package com.smartcampus.resource;
 import com.smartcampus.config.DataStore;
 import com.smartcampus.model.Room;
 import com.smartcampus.exception.ResourceNotFoundException;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -43,5 +44,21 @@ public class RoomResource {
         return Response.created(uri)
                 .entity(room)
                 .build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public Response deleteRoom(@PathParam("id") String id) {
+        if (DataStore.getRoomById(id) == null) {
+            throw new ResourceNotFoundException("Room with ID " + id + " not found");
+        }
+        
+        boolean deleted = DataStore.deleteRoom(id);
+        if (!deleted) {
+            return Response.status(Response.Status.CONFLICT)
+                    .entity(new com.smartcampus.exception.ErrorResponse("Cannot delete room with active sensors", 409))
+                    .build();
+        }
+        return Response.noContent().build();
     }
 }

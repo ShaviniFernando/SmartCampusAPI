@@ -3,7 +3,7 @@ package com.smartcampus.resource;
 import com.smartcampus.config.DataStore;
 import com.smartcampus.model.Sensor;
 import com.smartcampus.exception.ResourceNotFoundException;
-import com.smartcampus.exception.InvalidInputException;
+import com.smartcampus.exception.LinkedResourceNotFoundException;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -42,10 +42,11 @@ public class SensorResource {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response addSensor(Sensor sensor, @Context UriInfo uriInfo) {
         // Validation: room must exist
         if (DataStore.getRoomById(sensor.getRoomId()) == null) {
-            throw new InvalidInputException("Cannot create sensor: Room " + sensor.getRoomId() + " does not exist");
+            throw new LinkedResourceNotFoundException("Cannot create sensor: Room " + sensor.getRoomId() + " does not exist");
         }
         
         DataStore.addSensor(sensor);

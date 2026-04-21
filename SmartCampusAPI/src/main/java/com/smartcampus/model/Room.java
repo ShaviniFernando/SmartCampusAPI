@@ -5,6 +5,7 @@ public class Room {
     private String id;
     private String name;
     private int capacity;
+    private java.util.List<String> sensorIds = new java.util.ArrayList<>();
 
     // Default constructor (required for JSON deserialization)
     public Room() {
@@ -15,6 +16,7 @@ public class Room {
         this.id = id;
         this.name = name;
         this.capacity = capacity;
+        this.sensorIds = new java.util.ArrayList<>();
     }
 
     // Getters and Setters
@@ -42,8 +44,16 @@ public class Room {
         this.capacity = capacity;
     }
 
+    public java.util.List<String> getSensorIds() {
+        return sensorIds;
+    }
+
+    public void setSensorIds(java.util.List<String> sensorIds) {
+        this.sensorIds = sensorIds;
+    }
+
     @Override
     public String toString() {
-        return "Room{id='" + id + "', name='" + name + "', capacity=" + capacity + "}";
+        return "Room{id='" + id + "', name='" + name + "', capacity=" + capacity + ", sensorIds=" + sensorIds + "}";
     }
 }

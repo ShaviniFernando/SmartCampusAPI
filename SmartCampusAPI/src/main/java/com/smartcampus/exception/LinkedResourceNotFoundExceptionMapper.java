@@ -5,9 +5,9 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
 @Provider
-public class InvalidInputExceptionMapper implements ExceptionMapper<InvalidInputException> {
+public class LinkedResourceNotFoundExceptionMapper implements ExceptionMapper<LinkedResourceNotFoundException> {
     @Override
-    public Response toResponse(InvalidInputException exception) {
+    public Response toResponse(LinkedResourceNotFoundException exception) {
         return Response.status(422)
                 .entity(new ErrorResponse(exception.getMessage(), 422))
                 .build();

@@ -2,6 +2,7 @@ package com.smartcampus.model;
 
 public class Reading {
 
+    private String id;
     private long timestamp;
     private double value;
 
@@ -10,7 +11,8 @@ public class Reading {
     }
 
     // Parameterized constructor
-    public Reading(long timestamp, double value) {
+    public Reading(String id, long timestamp, double value) {
+        this.id = id;
         this.timestamp = timestamp;
         this.value = value;
     }
@@ -32,8 +34,16 @@ public class Reading {
         this.value = value;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
-        return "Reading{timestamp=" + timestamp + ", value=" + value + "}";
+        return "Reading{id='" + id + "', timestamp=" + timestamp + ", value=" + value + "}";
     }
 }

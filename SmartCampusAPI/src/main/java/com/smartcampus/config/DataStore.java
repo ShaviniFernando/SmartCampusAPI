@@ -25,9 +25,11 @@ public class DataStore {
     }
 
     public static boolean deleteRoom(String id) {
+        Room room = rooms.get(id);
+        if (room == null) return false;
+        
         // Return false if sensors are attached to this room (safety check)
-        boolean hasSensors = sensors.values().stream().anyMatch(s -> s.getRoomId().equals(id));
-        if (hasSensors) {
+        if (!room.getSensorIds().isEmpty()) {
             return false;
         }
         return rooms.remove(id) != null;
@@ -44,6 +46,10 @@ public class DataStore {
 
     public static void addSensor(Sensor sensor) {
         sensors.put(sensor.getId(), sensor);
+        Room room = getRoomById(sensor.getRoomId());
+        if (room != null && !room.getSensorIds().contains(sensor.getId())) {
+            room.getSensorIds().add(sensor.getId());
+        }
     }
 
     public static Collection<Sensor> getSensorsByType(String type) {

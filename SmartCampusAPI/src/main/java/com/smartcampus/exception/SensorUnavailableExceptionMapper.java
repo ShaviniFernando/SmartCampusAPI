@@ -5,9 +5,9 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
 @Provider
-public class ForbiddenExceptionMapper implements ExceptionMapper<ForbiddenException> {
+public class SensorUnavailableExceptionMapper implements ExceptionMapper<SensorUnavailableException> {
     @Override
-    public Response toResponse(ForbiddenException exception) {
+    public Response toResponse(SensorUnavailableException exception) {
         return Response.status(Response.Status.FORBIDDEN)
                 .entity(new ErrorResponse(exception.getMessage(), 403))
                 .build();

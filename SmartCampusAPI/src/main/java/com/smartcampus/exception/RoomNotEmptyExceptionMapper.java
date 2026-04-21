@@ -5,9 +5,9 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
 @Provider
-public class ConflictExceptionMapper implements ExceptionMapper<ConflictException> {
+public class RoomNotEmptyExceptionMapper implements ExceptionMapper<RoomNotEmptyException> {
     @Override
-    public Response toResponse(ConflictException exception) {
+    public Response toResponse(RoomNotEmptyException exception) {
         return Response.status(Response.Status.CONFLICT)
                 .entity(new ErrorResponse(exception.getMessage(), 409))
                 .build();

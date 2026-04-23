@@ -190,7 +190,10 @@ curl -X POST http://localhost:8080/api/v1/sensors/TEMP-01/readings \
 *   **Separation of Concerns:** Each class focuses on a single level of the resource hierarchy, adhering to the Single Responsibility Principle.
 *   **Maintainability:** It prevents the creation of "God Classes." As the API grows, sub-resources can be independently tested and modified without impacting the parent resource logic, leading to a much cleaner and more modular codebase.
 
-### 🟣 Part 5: Security, Semantics & Cross-Cutting Concerns
+#### 5.1 Resource Conflict Management (HTTP 409)
+**Scenario:** *Attempting to delete a Room that still has Sensors assigned to it.*
+
+**Analysis:** To maintain referential integrity, the API prevents the deletion of rooms that are "occupied" by active hardware. When a `DELETE` request is received, the system checks the room's `sensorIds` list. If not empty, we throw a custom `RoomNotEmptyException`. Our Exception Mapper translates this into a **409 Conflict**, informing the client that the request cannot be completed due to the current state of the resource (the presence of linked sensors).
 
 #### 5.2 Semantic Accuracy: HTTP 422 vs. 404
 **Question:** *Why is HTTP 422 often considered more semantically accurate than a standard 404 when the issue is a missing reference inside a valid JSON payload?*
@@ -199,6 +202,11 @@ curl -X POST http://localhost:8080/api/v1/sensors/TEMP-01/readings \
 *   **404 Not Found:** Implies the URL itself is wrong.
 *   **422 Unprocessable Entity:** Indicates that the URL and JSON syntax are correct, but the request contains **semantically invalid data** (e.g., a `roomId` that doesn't exist). 
 *   **Benefit:** Using 422 provides the client with specific feedback that the error lies in the *data provided*, not the *endpoint targeted*, facilitating much faster debugging.
+
+#### 5.3 State Constraints & Business Logic (HTTP 403)
+**Scenario:** *A sensor marked as "MAINTENANCE" cannot accept new readings.*
+
+**Analysis:** This implements a **State Constraint**. When a new reading is POSTed, the API inspects the parent sensor's status. If the status is `MAINTENANCE`, the request is rejected with a `SensorUnavailableException`, mapped to **403 Forbidden**. This correctly communicates that while the client is authenticated and the resource is found, the specific operation is "forbidden" because of the current operational state of the hardware.
 
 #### 5.4 Cybersecurity: The Danger of Stack Traces
 **Question:** *From a cybersecurity standpoint, explain the risks associated with exposing internal Java stack traces to external API consumers. What specific information could an attacker gather from such a trace?*

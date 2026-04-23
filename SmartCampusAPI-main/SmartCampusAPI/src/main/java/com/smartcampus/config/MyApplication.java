@@ -1,7 +1,7 @@
 package com.smartcampus.config;
 
 import org.glassfish.jersey.server.ResourceConfig;
-import javax.ws.rs.ApplicationPath;
+import jakarta.ws.rs.ApplicationPath;
 
 /**
  * JAX-RS Application configuration.

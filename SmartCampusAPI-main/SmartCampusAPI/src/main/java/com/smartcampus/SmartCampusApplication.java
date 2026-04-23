@@ -14,8 +14,8 @@ import java.net.URI;
 public class SmartCampusApplication {
 
     // Base URI for the Grizzly HTTP server
-    // Note: @ApplicationPath is ignored in embedded mode, so we must include it here.
-    public static final String BASE_URI = "http://localhost:8080/api/v1/";
+    // MyApplication's @ApplicationPath("/api/v1") will be appended to this
+    public static final String BASE_URI = "http://localhost:8080/";
 
     /**
      * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
@@ -39,7 +39,7 @@ public class SmartCampusApplication {
     public static void main(String[] args) throws IOException, InterruptedException {
         final HttpServer server = startServer();
         System.out.println(String.format("Jersey app started with endpoints available at "
-                + "%s%nHit Ctrl-C to stop it...", BASE_URI));
+                + "%sapi/v1%nHit Ctrl-C to stop it...", BASE_URI));
         
         // Keep the server running until manually stopped
         Thread.currentThread().join();

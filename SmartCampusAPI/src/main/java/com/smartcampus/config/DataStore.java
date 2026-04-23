@@ -20,6 +20,28 @@ public class DataStore {
     private static final Map<String, Room> rooms = new ConcurrentHashMap<>();
     private static final Map<String, Sensor> sensors = new ConcurrentHashMap<>();
 
+    static {
+        seedMockData();
+    }
+
+    /**
+     * Seeds initial demo data so the API is usable immediately after startup.
+     */
+    private static void seedMockData() {
+        // ── Rooms ─────────────────────────────────────────────────────────────
+        addRoom(new Room("LAB-101",  "Computer Lab",    40));
+        addRoom(new Room("LECT-202", "Lecture Hall",   150));
+        addRoom(new Room("LIB-301",  "Library",         80));
+
+        // ── Sensors ───────────────────────────────────────────────────────────
+        addSensor(new Sensor("TEMP-001", "Temperature", "ACTIVE",     22.5, "LAB-101"));
+        addSensor(new Sensor("CO2-001",  "CO2",         "ACTIVE",    400.0, "LECT-202"));
+        addSensor(new Sensor("HUM-001",  "Humidity",    "ACTIVE",     55.0, "LIB-301"));
+        addSensor(new Sensor("TEMP-002", "Temperature", "MAINTENANCE", 0.0, "LECT-202"));
+
+        System.out.println("[DataStore] Seeded initial rooms and sensors.");
+    }
+
     // ─── Room Operations ───────────────────────────────────────────────────────
 
     public static Map<String, Room> getAllRooms() {

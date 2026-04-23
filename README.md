@@ -193,7 +193,7 @@ curl -X POST http://localhost:8080/api/v1/sensors/TEMP-01/readings \
 ### 🟣 Part 5: Security, Semantics & Cross-Cutting Concerns
 
 #### 5.2 Semantic Accuracy: HTTP 422 vs. 404
-**Question:** *Why is HTTP 422 more accurate than 404 for missing references in a payload?*
+**Question:** *Why is HTTP 422 often considered more semantically accurate than a standard 404 when the issue is a missing reference inside a valid JSON payload?*
 
 **Analysis:** Semantic accuracy is vital for API usability. 
 *   **404 Not Found:** Implies the URL itself is wrong.
@@ -201,7 +201,7 @@ curl -X POST http://localhost:8080/api/v1/sensors/TEMP-01/readings \
 *   **Benefit:** Using 422 provides the client with specific feedback that the error lies in the *data provided*, not the *endpoint targeted*, facilitating much faster debugging.
 
 #### 5.4 Cybersecurity: The Danger of Stack Traces
-**Question:** *What are the risks of exposing internal Java stack traces?*
+**Question:** *From a cybersecurity standpoint, explain the risks associated with exposing internal Java stack traces to external API consumers. What specific information could an attacker gather from such a trace?*
 
 **Analysis:** Exposing stack traces is a critical security vulnerability known as **Information Leakage**. An attacker can extract:
 1.  **Framework Versions:** Allowing them to target known exploits (CVEs).
@@ -211,7 +211,7 @@ curl -X POST http://localhost:8080/api/v1/sensors/TEMP-01/readings \
 Our API uses a `GlobalExceptionMapper` to catch all unhandled errors and return a sanitized **500 Internal Server Error** without sensitive details.
 
 #### 5.5 Decorator Pattern: JAX-RS Filters for Logging
-**Question:** *Why use filters for logging instead of manual Logger calls in every method?*
+**Question:** *Why is it advantageous to use JAX-RS filters for cross-cutting concerns like logging, rather than manually inserting Logger.info() statements inside every single resource method?*
 
 **Analysis:** This is an implementation of **Aspect-Oriented Programming (AOP)** principles. 
 *   **DRY (Don't Repeat Yourself):** Centralizing logging in a `LoggingFilter` ensures that every request/response is captured automatically.

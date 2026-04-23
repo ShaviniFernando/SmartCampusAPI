@@ -15,7 +15,7 @@ public class RoomNotEmptyExceptionMapper implements ExceptionMapper<RoomNotEmpty
     public Response toResponse(RoomNotEmptyException exception) {
         return Response.status(Response.Status.CONFLICT)
                 .type(MediaType.APPLICATION_JSON)
-                .entity(new ErrorResponse("Conflict", "Room still has active sensors assigned."))
+                .entity(new ErrorResponse("Conflict", "The room is currently occupied by active hardware."))
                 .build();
     }
 }

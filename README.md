@@ -1,4 +1,4 @@
-# 🏛️ SmartCampusAPI
+# SmartCampusAPI
 ### *Next-Generation RESTful API for Smart Campus Management*
 
 [![JAX-RS](https://img.shields.io/badge/JAX--RS-3.1.3-blue.svg)](https://jakarta.ee/specifications/restful-ws/)
@@ -7,10 +7,10 @@
 
 ---
 
-## 📖 Overview
+## Overview
 The **SmartCampusAPI** is a sophisticated, stateless RESTful service engineered using **JAX-RS (Jakarta REST)**. It serves as the digital backbone for a modern campus, providing real-time management of physical spaces (Rooms) and IoT infrastructure (Sensors). Designed with high availability and thread safety in mind, it utilizes advanced JAX-RS patterns such as Sub-Resource Locators and Custom Exception Mapping.
 
-### 🌟 Key Pillars
+### Key Pillars
 *   **Performance:** Optimized in-memory operations using `ConcurrentHashMap`.
 *   **Discoverability:** Full HATEOAS-compliant discovery endpoint.
 *   **Robustness:** Global error handling with semantic HTTP status codes.
@@ -18,7 +18,7 @@ The **SmartCampusAPI** is a sophisticated, stateless RESTful service engineered 
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```mermaid
 graph TD
@@ -39,13 +39,13 @@ graph TD
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
-### 📋 Prerequisites
+### Prerequisites
 *   **Java JDK 11** or higher
 *   **Apache Maven 3.6+**
 
-### 🛠️ Build & Installation
+### Build & Installation
 ```bash
 # 1. Clone the repository
 git clone https://github.com/ShaviniFernando/SmartCampusAPI.git
@@ -57,7 +57,7 @@ cd SmartCampusAPI
 mvn clean package
 ```
 
-### 🏃 Running the Service
+### Running the Service
 You can run the API either as a standalone application (embedded Grizzly) or deploy it to a container (Tomcat).
 
 **Option A: Development Mode (Grizzly)**
@@ -71,14 +71,14 @@ Deploy the generated `target/ROOT.war` to your Tomcat `webapps` folder. The API 
 
 ---
 
-## 📡 API Reference
+## API Reference
 
-### 🗺️ Discovery & Navigation
+### Discovery & Navigation
 | Endpoint | Method | Description |
 | :--- | :--- | :--- |
 | `/api/v1/` | `GET` | **API Discovery:** Returns version and HATEOAS links. |
 
-### 🏠 Room Management
+### Room Management
 | Endpoint | Method | Description |
 | :--- | :--- | :--- |
 | `/api/v1/rooms` | `GET` | Retrieve all registered rooms. |
@@ -86,14 +86,14 @@ Deploy the generated `target/ROOT.war` to your Tomcat `webapps` folder. The API 
 | `/api/v1/rooms/{id}`| `GET` | Get detailed metadata for a specific room. |
 | `/api/v1/rooms/{id}`| `DELETE`| Remove a room (blocked if sensors are linked). |
 
-### 🌡️ Sensor Network
+### Sensor Network
 | Endpoint | Method | Description |
 | :--- | :--- | :--- |
 | `/api/v1/sensors` | `GET` | List all sensors (Supports `?type=` filter). |
 | `/api/v1/sensors` | `POST` | Register a sensor to a room (Atomic update). |
 | `/api/v1/sensors/{id}`| `GET` | Get real-time sensor status. |
 
-### 📊 Historical Data (Sub-Resource)
+### Historical Data (Sub-Resource)
 | Endpoint | Method | Description |
 | :--- | :--- | :--- |
 | `/api/v1/sensors/{id}/readings` | `GET` | Retrieve time-series history for a sensor. |
@@ -101,7 +101,7 @@ Deploy the generated `target/ROOT.war` to your Tomcat `webapps` folder. The API 
 
 ---
 
-## ⌨️ Sample Operations (cURL)
+## Sample Operations (cURL)
 
 > [!TIP]
 > Use these commands to quickly verify your installation.
@@ -134,9 +134,9 @@ curl -X POST http://localhost:8080/api/v1/sensors/TEMP-01/readings \
 
 ---
 
-## 📝 Technical Report (Conceptual Answers)
+## Technical Report (Conceptual Answers)
 
-### 🟢 Part 1: Service Architecture & Setup
+### Part 1: Service Architecture & Setup
 
 #### 1.1 JAX-RS Resource Lifecycle & Thread Safety
 **Question:** *Explain the default lifecycle of a JAX-RS Resource class. Is a new instance instantiated for every incoming request, or does the runtime treat it as a singleton? Elaborate on how this architectural decision impacts the way you manage and synchronize your in-memory data structures (maps/lists) to prevent data loss or race conditions.*
@@ -151,7 +151,7 @@ curl -X POST http://localhost:8080/api/v1/sensors/TEMP-01/readings \
 **Analysis:** **HATEOAS** (Hypermedia as the Engine of Application State) elevates an API to Level 3 of the Richardson Maturity Model. By providing dynamic URIs in the response (as seen in our `/api/v1/` root), the API becomes **self-discoverable**. 
 *   **Benefit:** It decouples the client from the server’s URI structure. If the endpoint paths change, the client—which follows links rather than hardcoding URLs—continues to function without modification. This significantly enhances the system's evolvability and reduces the maintenance burden on client developers, who can rely on the server to guide the application's state transitions rather than strictly following static, brittle documentation.
 
-### 🔵 Part 2: Room Management
+### Part 2: Room Management
 
 #### 2.1 Payload Optimization: IDs vs. Full Objects
 **Question:** *When returning a list of rooms, what are the implications of returning only IDs versus returning the full room objects? Consider network bandwidth and client side processing.*
@@ -170,7 +170,7 @@ curl -X POST http://localhost:8080/api/v1/sensors/TEMP-01/readings \
     2.  The **second request** finds that the resource no longer exists and returns `404 Not Found`. 
 *   **Justification:** Although the HTTP status codes differ, the side effect on the server state is identical: the resource remains deleted. In REST, idempotency refers to the *state* of the server, not the response code received by the client.
 
-### 🟡 Part 3: Sensor Operations & Linking
+### Part 3: Sensor Operations & Linking
 
 #### 3.1 Content-Type Integrity & @Consumes
 **Question:** *We explicitly use the @Consumes (MediaType.APPLICATION_JSON) annotation on the POST method. Explain the technical consequences if a client attempts to send data in a different format, such as text/plain or application/xml. How does JAX-RS handle this mismatch?*
@@ -185,7 +185,7 @@ curl -X POST http://localhost:8080/api/v1/sensors/TEMP-01/readings \
 **Analysis:** In RESTful design, **Path Parameters** are used for *identity* (e.g., `/sensors/101`), whereas **Query Parameters** are used for *attributes* (e.g., `?type=CO2`).
 *   **Superiority:** The query parameter approach is vastly more scalable and flexible. It allows for optional, combinable filters (e.g., `?type=CO2&status=ACTIVE`) without creating an explosion of hardcoded URI paths. Using paths for filtering leads to brittle routing logic and a confusing URI hierarchy, whereas query parameters follow the industry standard for searching, sorting, and filtering collections.
 
-### 🔴 Part 4: Deep Nesting with Sub-Resources
+### Part 4: Deep Nesting with Sub-Resources
 
 #### 4.1 Architectural Benefits of Sub-Resource Locators
 **Question:** *Discuss the architectural benefits of the Sub-Resource Locator pattern. How does delegating logic to separate classes help manage complexity in large APIs compared to defining every nested path (e.g., sensors/{id}/readings/{rid}) in one massive controller class?*
@@ -194,7 +194,7 @@ curl -X POST http://localhost:8080/api/v1/sensors/TEMP-01/readings \
 *   **Management of Complexity:** Instead of creating a "God Class" that handles every operation for sensors, their metadata, and their telemetry history, we delegate the logic to a dedicated `SensorReadingResource`. 
 *   **Benefits:** This promotes **Separation of Concerns** and follows the **Single Responsibility Principle**. It makes the codebase easier to navigate, test, and maintain. As the API grows, sub-resources can be modified or extended independently without risking regression in the parent resource logic, leading to a much cleaner, modular, and professional architecture.
 
-### 🟣 Part 5: Security, Semantics & Cross-Cutting Concerns
+### Part 5: Security, Semantics & Cross-Cutting Concerns
 
 #### 5.1 Resource Conflict Management (HTTP 409)
 **Scenario:** *Attempting to delete a Room that still has Sensors assigned to it.*
@@ -234,7 +234,7 @@ Our API uses a `GlobalExceptionMapper` to catch all unhandled errors and return 
 
 ---
 
-## 🛠️ Error Handling Summary
+## Error Handling Summary
 The API implements a robust error-mapping layer to ensure consistent and informative responses:
 
 | Status Code | Meaning | Context |
